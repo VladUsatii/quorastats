@@ -31,12 +31,15 @@ This program allows users to view a live counter of their followers, updated eve
 
 ```python3
 from Public import Public
+import time
 
 p = Public('vlad usatii')
 p2 = Public('fdhjsafdu8saf09hds8af9hdsa')
 
 # prints counts of a real account
-print(p.followercount(), p.followingcount())
+while True:
+	print(p.followercount(), p.followingcount())
+	time.sleep(100)
 
 # prints status of user page 1 and 2 (not a real account)
 print(f'Account 1: {p.status}', f'Account 2: {p2.status}')
