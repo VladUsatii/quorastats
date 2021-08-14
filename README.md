@@ -30,6 +30,18 @@ python -m pip3 install quorastats
 This program allows users to view a live counter of their followers, updated every _n_ seconds. **Warning: Update should be kept high if possible, due to influx of users to Quora's network. They may also ban IP if too low (please use best judgement).**
 
 ```python3
-import quorastats as qs
+from Public import Public
 
-# grabbing follower-count is 
+p = Public('vlad usatii')
+p2 = Public('fdhjsafdu8saf09hds8af9hdsa')
+
+# prints counts of a real account
+print(p.followercount(), p.followingcount())
+
+# prints status of user page 1 and 2 (not a real account)
+print(f'Account 1: {p.status}', f'Account 2: {p2.status}')
+```
+
+## Contributions
+
+Submit a pull request to get a feature added.
