@@ -21,7 +21,7 @@ class Public(object):
 		self.url = f'https://www.quora.com/{self.username}'
 		self.response = get(self.url).text
 
-		# returns 200 if page found : else, returns real status code
+		# returns 200 if account found : else status code
 		self.status = int(re.sub("[^0-9]", "", str(get(self.url))))
 
 	# core functions
@@ -29,32 +29,43 @@ class Public(object):
 	def sub(self, response: str) -> int:
 		return int(re.sub("[^0-9]", "", response))
 
+	# int parse
+	def intparser(self, text: str, skipLen = 8) -> int:
+		skip = self.response.find(text) + len(text)
+		parsed = self.sub(self.response[skip:skip + skipLen])
+		return parsed
+
+	def boolparser(self, text: str, skipLen = 8) -> bool:
+		skip = self.response.find(text) + len(text)
+		halfparse = self.response[skip:skip + skipLen]
+		if 'true' in halfparse:
+			return True
+		else:
+			return False
+
+	def asciiparser(self, text: str, find: str, skipLen = 8) -> str:
+		pass
+
 	# library functions
 
-	# Returns int (low latency)
-	def followingcount(self) -> int:
-		text = '\\"followingCount\\":'
-		skip = self.response.find(text) + len(text)
-		following = self.sub(self.response[skip:skip + 8])
-		return following
+	def followingcount(self) -> int: return self.intparser('\\"followingCount\\":')
 
-	def followercount(self) -> int:
-		text = '\\"followerCount\\":'
-		skip = self.response.find(text) + len(text)
-		followers = self.sub(self.response[skip:skip + 8])
-		return followers
+	def followercount(self) -> int: return self.intparser('\\"followerCount\\":')
 
-	def viewcount(self) -> int:
-		text = '\\"viewCount\\":'
-		skip = self.response.find(text) + len(text)
-		viewcount = self.sub(self.response[skip:skip + 8])
-		return viewcount
+	def viewcount(self) -> int: return self.intparser('\\"viewCount\\":')
 
-	def answercount(self) -> int:
-		pass
+	def lastmonthviews(self) -> int: return self.intparser('\\"lastMonthPublicContentViews\\"')
 
-	def questioncount(self) -> int:
-		pass
+	def answercount(self) -> int: return self.intparser('\\"numPublicAnswers\\"')
 
-p = Public("vlad usatii")
-print(p.followingcount(), p.followercount(), p.viewcount())
+	def questioncount(self) -> int: return self.intparser('\\"numProfileQuestions\\":')
+
+	def questionshares(self) -> int: return self.intparser('\\"quoraSharesCount\\":')
+
+	# . . .
+
+	def isblocked(self) -> bool: return self.boolparser('\\"isUserBanned\\":', 6)
+
+
+p = Public("Vlad Usatii")
+print(p.followingcount(), p.followercount(), p.viewcount(), p.answercount(), p.questioncount(), p.isblocked())

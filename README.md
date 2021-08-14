@@ -38,8 +38,8 @@ p2 = Public('fdhjsafdu8saf09hds8af9hdsa')
 
 # prints counts of a real account
 while True:
-	print(p.followercount(), p.followingcount())
-	time.sleep(100)
+  print(p.followercount(), p.followingcount())
+  time.sleep(100)
 
 # prints status of user page 1 and 2 (not a real account)
 print(f'Account 1: {p.status}', f'Account 2: {p2.status}')
