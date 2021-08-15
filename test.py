@@ -2,7 +2,7 @@
 import time
 from Public import Public
 
-p = Public("Vlad Usatii") # real account
+p = Public("real account") # real account
 p2 = Public("fdsfdsafdsafdsafdsafd") # fake account
 
 # prints real status of user page

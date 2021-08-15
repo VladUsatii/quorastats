@@ -26,7 +26,9 @@ class Public(object):
 	# core functions
 
 	def sub(self, response: str) -> int:
-		return int(re.sub("[^0-9]", "", response))
+		sub = re.sub("[^0-9]", "", response)
+		
+		return sub
 
 	# self.response == Rget()
 	def Rget(self): 
