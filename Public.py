@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # Public.py --> Vlad Usatii @ youshould.readproduct.com
 import sys, os, time, re
 from requests import get
@@ -29,15 +28,20 @@ class Public(object):
 	def sub(self, response: str) -> int:
 		return int(re.sub("[^0-9]", "", response))
 
+	# self.response == Rget()
+	def Rget(self): 
+		url = self.url
+		return get(url).text
+
 	# int parse
-	def intparser(self, text: str, skipLen = 8) -> int:
-		skip = self.response.find(text) + len(text)
-		parsed = self.sub(self.response[skip:skip + skipLen])
+	def intparser(self, newresp: str, text: str, skipLen = 8) -> int:
+		skip = newresp.find(text) + len(text)
+		parsed = self.sub(newresp[skip:skip + skipLen])
 		return parsed
 
-	def boolparser(self, text: str, skipLen = 8) -> bool:
-		skip = self.response.find(text) + len(text)
-		halfparse = self.response[skip:skip + skipLen]
+	def boolparser(self, newresp: str, text: str, skipLen = 8) -> bool:
+		skip = newresp.find(text) + len(text)
+		halfparse = newresp[skip:skip + skipLen]
 		if 'true' in halfparse:
 			return True
 		else:
@@ -48,24 +52,45 @@ class Public(object):
 
 	# library functions
 
-	def followingcount(self) -> int: return self.intparser('\\"followingCount\\":')
+	def followingcount(self) -> int:
+		newresp = get(self.url).text # must include new func call every time
+		return self.intparser(newresp, '\\"followingCount\\":')
 
-	def followercount(self) -> int: return self.intparser('\\"followerCount\\":')
+	def followercount(self) -> int:
+		newresp = get(self.url).text # must include new func call every time
+		return self.intparser(newresp, '\\"followerCount\\":')
 
-	def viewcount(self) -> int: return self.intparser('\\"viewCount\\":')
+	def viewcount(self) -> int:
+		newresp = get(self.url).text # must include new func call every time
+		return self.intparser(newresp, '\\"viewCount\\":')
 
-	def lastmonthviews(self) -> int: return self.intparser('\\"lastMonthPublicContentViews\\"')
+	def lastmonthviews(self) -> int:
+		newresp = get(self.url).text # must include new func call every time
+		return self.intparser(newresp, '\\"lastMonthPublicContentViews\\"')
 
-	def answercount(self) -> int: return self.intparser('\\"numPublicAnswers\\"')
+	def answercount(self) -> int:
+		newresp = get(self.url).text # must include new func call every time
+		return self.intparser(newresp, '\\"numPublicAnswers\\"')
 
-	def questioncount(self) -> int: return self.intparser('\\"numProfileQuestions\\":')
+	def questioncount(self) -> int:
+		newresp = get(self.url).text # must include new func call every time
+		return self.intparser(newresp, '\\"numProfileQuestions\\":')
 
-	def questionshares(self) -> int: return self.intparser('\\"quoraSharesCount\\":')
+	def questionshares(self) -> int:
+		newresp = get(self.url).text # must include new func call every time
+		return self.intparser(newresp, '\\"quoraSharesCount\\":')
+
+	## more complex calls
+
+	def totalanswerstoquestions(self) -> int:
+		url = self.url + '/questions/'
+		response = get(url).text
+
+		pass
 
 	# . . .
 
-	def isblocked(self) -> bool: return self.boolparser('\\"isUserBanned\\":', 6)
+	def isblocked(self) -> bool:
+		newresp = get(self.url).text # must include new func call every time
+		return self.boolparser(newresp, '\\"isUserBanned\\":', 6)
 
-
-p = Public("Vlad Usatii")
-print(p.followingcount(), p.followercount(), p.viewcount(), p.answercount(), p.questioncount(), p.isblocked())
