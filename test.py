@@ -8,6 +8,6 @@ p2 = Public("fdsfdsafdsafdsafdsafd") # fake account
 # prints real status of user page
 print(p.status, p2.status)
 
-while True:
-	print(p.followingcount(), p.followercount(), p.viewcount(), p.answercount(), p.questioncount(), p.isblocked())
-	time.sleep(10)
+print(f'{p.followingcount()}  {p.followercount()}  {p.viewcount()}  {p.answercount()}  {p.questioncount()}  {p.isblocked()}\n\n{p.questions()}')
+
+print(f'\n\n{p.userdescription()}')

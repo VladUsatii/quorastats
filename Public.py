@@ -1,6 +1,13 @@
 # Public.py --> Vlad Usatii @ youshould.readproduct.com
+# -*- coding: utf-8 -*-
+
+# regex and os
 import sys, os, time, re
+
+# scrape
 from requests import get
+from bs4 import BeautifulSoup
+from urllib.request import urlopen
 
 class Public(object):
 	def __init__(self, username: str):
@@ -18,17 +25,21 @@ class Public(object):
 
 		# source code
 		self.url = f'https://www.quora.com/{self.username}'
-		self.response = get(self.url).text
+		self.response = self.Rget()
 
 		# returns 200 if account found : else status code
 		self.status = int(re.sub("[^0-9]", "", str(get(self.url))))
 
+		self.scrape_headers = {
+			'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64)'
+			'AppleWebKit/537.36 (KHTML, like Gecko)'
+			'Chrome/64.0.3282.167 Safari/537.36'
+		}
+
 	# core functions
 
 	def sub(self, response: str) -> int:
-		sub = re.sub("[^0-9]", "", response)
-		
-		return sub
+		return re.sub("[^0-9]", "", response)
 
 	# self.response == Rget()
 	def Rget(self): 
@@ -84,7 +95,19 @@ class Public(object):
 
 	## more complex calls
 
-	def totalanswerstoquestions(self) -> int:
+	def userdescription(self) -> str:
+		user = self.username
+		# non-raw source code
+		url = urlopen(f'http://www.quora.com/{self.username}/').read()
+		soup = BeautifulSoup(url, 'html.parser')
+		match = soup.find('meta', attrs={'name': 'description'})
+		print(match)
+
+	def questions(self) -> str: # returns json
+		user = self.username
+		pass
+
+	def totalanswerstousersquestions(self) -> int:
 		url = self.url + '/questions/'
 		response = get(url).text
 
