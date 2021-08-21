@@ -101,7 +101,7 @@ class Public(object):
 		url = urlopen(f'http://www.quora.com/{self.username}/').read()
 		soup = BeautifulSoup(url, 'html.parser')
 		match = soup.find('meta', attrs={'name': 'description'})
-		print(match)
+		print(match) # returns None for some reason, probably a GraphQL patch
 
 	def questions(self) -> str: # returns json
 		user = self.username
@@ -116,6 +116,29 @@ class Public(object):
 	# . . .
 
 	def isblocked(self) -> bool:
-		newresp = get(self.url).text # must include new func call every time
+		newresp = get(self.url).text # clean func call
 		return self.boolparser(newresp, '\\"isUserBanned\\":', 6)
 
+	def isFlagged(self, flags = None) -> bool:
+		newresp = get(self.url).text # clean func call
+		if flags is not None and flags == 'BOTH':
+			if self.boolparser(newresp, '\\"isFlaggedForFakeName\\":') == False:
+				t = False
+				print(f'Flagged for Fake Name: {t}; Account is active')
+			else:
+				t = True
+				print(f'Flagged for Fake Name: {t}; Account is inactive')
+			if self.boolparser(newresp, '\\"isFlaggedForBadName\\":') == False:
+				t = False
+				print(f'Flagged for Bad Name: {t}; Account is active')
+			else:
+				t = True
+				print(f'Flagged for Bad Name: {t}; Account is disabled for bad name')
+		if flags == None:
+			if self.boolparser(newresp, '\\"isFlaggedForFakeName\\":') == False and self.boolparser(newresp, '\\"isFlaggedForBadName\\":') == False:
+				print("All returned not flagged")
+				return False
+			else:
+				print("One or more returned flagged")
+				return True
+		return 'done'
