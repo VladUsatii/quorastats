@@ -100,9 +100,23 @@ class Public(object):
 
 	## more complex calls
 
+	def downloadprofilepic(self):
+		newresp = get(self.url).text # call
+		skip = newresp.find('\\"profileImageUrl\\":') + len('\\"profileImageUrl\\":')
+		parse = newresp[skip + 2:skip + 250]
+		if '\\",\\"network\\":{\\"nid\\"' in parse:
+			final = parse.split('\\",\\"network\\":{\\"nid\\"')[0]
+			image = get(final).content
+			with open(f'{self.username}_profileimage.jpg', 'wb') as handler:
+				try:
+					handler.write(image)
+					print(f"Downloaded image. Link to picture is: {final}.\nSaved file is {self.username}_profileimage.jpg.")
+				except IOError:
+					print("Cound not save image.")
+
 	def userdescription(self) -> str:
 		newresp = get(self.url).text # must include per call
-		return self.stringparser(newresp, "meta name=\'description\' content=\'", 50)
+		return self.stringparser(newresp, "meta name=\'description\' content", 50)
 
 	def questions(self) -> str: # returns json
 		user = self.username
