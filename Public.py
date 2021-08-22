@@ -60,6 +60,11 @@ class Public(object):
 		else:
 			return False
 
+	def stringparser(self, newresp: str, text: str, skipLen = 8) -> str:
+		skip = newresp.find(text) + len(text)
+		stringparse = newresp[skip:skip + skipLen]
+		return stringparse
+
 	def asciiparser(self, text: str, find: str, skipLen = 8) -> str:
 		pass
 
@@ -96,12 +101,8 @@ class Public(object):
 	## more complex calls
 
 	def userdescription(self) -> str:
-		user = self.username
-		# non-raw source code
-		url = urlopen(f'http://www.quora.com/{self.username}/').read()
-		soup = BeautifulSoup(url, 'html.parser')
-		match = soup.find('meta', attrs={'name': 'description'})
-		print(match) # returns None for some reason, probably a GraphQL patch
+		newresp = get(self.url).text # must include per call
+		return self.stringparser(newresp, "meta name=\'description\' content=\'", 50)
 
 	def questions(self) -> str: # returns json
 		user = self.username
@@ -119,7 +120,7 @@ class Public(object):
 		newresp = get(self.url).text # clean func call
 		return self.boolparser(newresp, '\\"isUserBanned\\":', 6)
 
-	def isFlagged(self, flags = None) -> bool:
+	def isFlagged(self, flags = None) -> bool: # FLAGS: 'BOTH' -> See both flag statuses, FLAGS: None -> See both flag statuses
 		newresp = get(self.url).text # clean func call
 		if flags is not None and flags == 'BOTH':
 			if self.boolparser(newresp, '\\"isFlaggedForFakeName\\":') == False:
@@ -142,3 +143,12 @@ class Public(object):
 				print("One or more returned flagged")
 				return True
 		return 'done'
+
+	def canSeeDeletedContent(self) -> bool:
+		newresp = get(self.url).text # clean func call
+		return self.boolparser(newresp, '\\"canSeeDeletedContent\\":', 6)
+
+	def canReviewAnswers(self) -> bool:
+		newresp = get(self.url).text # clean func call
+		return self.boolparser(newresp, '\\"viewerCanReviewAnswers\\":', 6)
+
