@@ -116,7 +116,11 @@ class Public(object):
 
 	def userdescription(self) -> str:
 		newresp = get(self.url).text # must include per call
-		return self.stringparser(newresp, "meta name=\'description\' content", 50)
+		skip = newresp.find("meta name=\'description\' content=\'") + len("meta name=\'description\' content=\'")
+		parse = newresp[skip:10000]
+		if "rel=\'canonical\' href" in parse:
+			final = parse.split("link rel=\'canonical\' href")[0]
+		return final[0:-5]
 
 	def questions(self) -> str: # returns json
 		user = self.username
