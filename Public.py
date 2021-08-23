@@ -132,6 +132,13 @@ class Public(object):
 
 		pass
 
+	def joindate(self) -> str:
+		newresp = get(self.url).text # call
+		skip = newresp.find('\\"creationTime\\":') + len('\\"creationTime\\":')
+		mid = int(self.intparser(newresp, '\\"creationTime\\":', 20))
+		final = mid//365//24//60//60//60//60//60//60
+		return final
+
 	# . . .
 
 	def isblocked(self) -> bool:

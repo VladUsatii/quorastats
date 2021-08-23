@@ -17,4 +17,6 @@ p2 = Public("fdsfdsafdsafdsafdsafd") # fake account
 # downloading profile image
 # p.downloadprofilepic()
 
-print(f'{p.userdescription()}')
+#print(f'{p.userdescription()}')
+
+print(f'{p.joindate()}')
