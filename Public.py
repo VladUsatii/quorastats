@@ -94,11 +94,39 @@ class Public(object):
 		newresp = get(self.url).text # must include new func call every time
 		return self.intparser(newresp, '\\"numProfileQuestions\\":')
 
+	def publicquestioncount(self) -> int:
+		newresp = get(self.url).text
+		return self.intparser(newresp, '\\"numPublicQuestions\\":')
+
+	def privatequestioncount(self) -> int:
+		return int(self.questioncount()) - int(self.publicquestioncount())
+
 	def questionshares(self) -> int:
 		newresp = get(self.url).text # must include new func call every time
 		return self.intparser(newresp, '\\"quoraSharesCount\\":')
 
+	def postcount(self) -> int:
+		newresp = get(self.url).text # new every time
+		return self.intparser(newresp, '\\"postsCount\\":')
+
+	def followedtopics(self) -> int:
+		newresp = get(self.url).text
+		return self.intparser(newresp, '\\"numFollowedTopics\\":')
+
+	def followedtribes(self) -> int: # not quite sure what a tribe is
+		newresp = get(self.url).text
+		return self.intparser(newresp, '\\"numFollowedTribes\\":')
+
 	## more complex calls
+
+	def contentlanguage(self) -> str:
+		newresp = get(self.url).text # call
+		skip = newresp.find('\\"contentLanguageCode\\":') + len('\\"contentLanguageCode\\":')
+		parse = newresp[skip:skip + 6]
+		if 'en' in parse:
+			return 'English'
+		elif 'ru' in parse:
+			return 'Russian' # more coming, but have to learn the code names
 
 	def downloadprofilepic(self):
 		newresp = get(self.url).text # call

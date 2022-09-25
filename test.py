@@ -19,4 +19,9 @@ p2 = Public("fdsfdsafdsafdsafdsafd") # fake account
 
 #print(f'{p.userdescription()}')
 
-print(f'{p.joindate()}')
+#print(f'{p.joindate()}')
+
+
+
+print(f'{p.questioncount()} {p.publicquestioncount()}')
+print(f'{p.privatequestioncount()}')
